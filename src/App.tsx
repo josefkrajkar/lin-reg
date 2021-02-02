@@ -4,6 +4,7 @@ import axios from 'axios';
 interface State {
   maxX: number;
   maxY: number;
+  data: any[];
 }
 
 function App() {
@@ -23,7 +24,8 @@ function App() {
       setState((actState: State) => ({
         ...actState,
         maxX: Math.floor(maxX + (maxX / 10)),
-        maxY: Math.floor(maxY + (maxY / 10))
+        maxY: Math.floor(maxY + (maxY / 10)),
+        data
       }))
     })
     .catch(err => {
@@ -33,7 +35,8 @@ function App() {
 
   const [state, setState] = React.useState({
     maxX: 100,
-    maxY: 100
+    maxY: 100,
+    data: []
   });
 
   return (
@@ -92,9 +95,36 @@ function App() {
         style={{
           flex: '1 1 auto',
           display: 'flex',
-          flexFlow: 'column'
+          flexFlow: 'column',
+          position: 'relative'
         }}
+        id='my-canvas'
       >
+        {
+          state.data.map((item: any, key: number) => {
+            const element = document.getElementById('my-canvas');
+            if (element) {
+              const rect = element.getBoundingClientRect()
+              return <svg
+                key={key}
+                style={{
+                  bottom: (rect.height / state.maxY) * item.Weight_in_lbs,
+                  left: (rect.width / state.maxX) * item.Miles_per_Gallon,
+                  position: 'absolute'
+                }}
+                width="6"
+                height="6"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <g>
+                  <ellipse ry="3" rx="3" id="svg_1" cy="3" cx="3" strokeWidth="1.5" fill="#84D3DB"/>
+                </g>
+              </svg>
+            }
+            return null
+          })
+        }
+
         <div
           style={{
             flex: '1 1 auto',

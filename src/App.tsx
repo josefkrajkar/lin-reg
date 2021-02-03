@@ -21,6 +21,8 @@ function App() {
   const createModel = () => {
     const model = tf.sequential();
     model.add(tf.layers.dense({inputShape: [1], units: 1}));
+    model.add(tf.layers.dense({units: 512, activation: 'relu'}));
+    model.add(tf.layers.dense({units: 256, activation: 'relu'}));
     model.add(tf.layers.dense({units: 1}));
     return model;
   };
@@ -107,6 +109,7 @@ function App() {
 
     axios.get('https://storage.googleapis.com/tfjs-tutorials/carsData.json')
       .then(({data}) => {
+        console.log(data[0]);
         const filtered: Array<{x: number, y: number}> = data
           .filter((item: any) => (item.Weight_in_lbs !== null && item.Miles_per_Gallon !== null))
           .map((item: any) => ({
@@ -283,7 +286,7 @@ function App() {
               transform: 'rotate(90deg)'
             }}
           >
-            Weight in lbs
+            Weight_in_lbs
           </div>
           <div
             style={{

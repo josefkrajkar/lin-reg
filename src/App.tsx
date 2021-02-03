@@ -1,6 +1,7 @@
 import * as  React from 'react';
 import axios from 'axios';
 import * as tf from '@tensorflow/tfjs';
+import Loader from './Loader';
 
 interface State {
   maxX: number;
@@ -14,6 +15,7 @@ interface State {
     y: number;
   }>;
   model?: tf.ModelTensorInfo;
+  loading: boolean;
 }
 
 function App() {
@@ -101,7 +103,8 @@ function App() {
     maxY: 100,
     data: [],
     model: undefined,
-    prediction: []
+    prediction: [],
+    loading: true
   });
 
   React.useEffect(() => {
@@ -134,7 +137,8 @@ function App() {
             maxY: Math.floor(maxY + (maxY / 10)),
             data: filtered,
             model,
-            prediction: testModel(model, data, tensorData)
+            prediction: testModel(model, data, tensorData),
+            loading: false
           }))
         })
         .catch((err) => {
@@ -207,6 +211,10 @@ function App() {
         }}
         id='my-canvas'
       >
+        {
+          state.loading &&
+          <Loader />
+        }
         {
           state.data.map((item: any, key: number) => {
             const element = document.getElementById('my-canvas');
